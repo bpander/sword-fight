@@ -28,8 +28,8 @@ define([
             // We need to get the initial x and y position of the mouse
             this.mouse.x = e.x;
             this.mouse.y = e.y;
-            window.removeEventListener('mousemove', _events.onFirstMouseMove);
-            window.addEventListener('mousemove', _events.onMouseMove);
+            window.removeEventListener('mousemove', this._events.onFirstMouseMove);
+            window.addEventListener('mousemove', this._events.onMouseMove);
         },
 
         onMouseMove: function (e) {
@@ -53,14 +53,14 @@ define([
     };
 
     Input.init = function () {
-        Util.bindAll(_events, this);
+        this._events = Util.bindAll(_events, this);
         this.bindEvents();
     };
 
     Input.bindEvents = function () {
-        window.addEventListener('keydown', _events.onKeyDown);
-        window.addEventListener('keyup', _events.onKeyUp);
-        window.addEventListener('mousemove', _events.onFirstMouseMove);
+        window.addEventListener('keydown', this._events.onKeyDown);
+        window.addEventListener('keyup', this._events.onKeyUp);
+        window.addEventListener('mousemove', this._events.onFirstMouseMove);
     };
 
     Input.isKeyDown = function (keyCode) {

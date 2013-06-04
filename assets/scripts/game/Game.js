@@ -54,12 +54,22 @@ define([
         }
     };
 
+    var _options = {
+
+        enablePointerLock: true
+
+    };
+
 
     /**
      * Initialize the game framework
+     * @param  {Object}  params
+     * @param  {Boolean} params.enablePointerLock
      * @return {Game}
      */
-    Game.init = function () {
+    Game.init = function (params) {
+
+        Util.extend(_options, params);
 
         // Create the renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -68,14 +78,16 @@ define([
 
         // Append the renderer's dom element and request pointer lock
         document.body.appendChild(this.renderer.domElement);
-        Util.requestPointerLock(this.renderer.domElement);
+        if (_options.requestPointerLock === true) {
+            Util.requestPointerLock(this.renderer.domElement);
+        }
 
         // Set up the camera and scene
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
         this.setAspectRatio();
 
         this.scene = new Physijs.Scene();
-        this.scene.setGravity(new THREE.Vector3( 0, -385, 0 ));
+        this.scene.setGravity(new THREE.Vector3( 0, 0, 0 ));
         this.scene.add(this.camera);
 
         // Get the ball rolling...
@@ -110,7 +122,7 @@ define([
      * @return {Game}
      */
     Game.bindScope = function () {
-        Util.bindAll(_events, this);
+        this._events = Util.bindAll(_events, this);
         this.animate = this.animate.bind(this);
         return this;
     };
@@ -120,8 +132,10 @@ define([
      * @return {Game}
      */
     Game.bindEvents = function () {
-        window.addEventListener('resize', _events.onResize, false);
-        this.renderer.domElement.addEventListener('click', _events.onClick);
+        window.addEventListener('resize', this._events.onResize, false);
+        if (_options.requestPointerLock === true) {
+            this.renderer.domElement.addEventListener('click', this._events.onClick);
+        }
         return this;
     };
 
@@ -146,7 +160,7 @@ define([
         this.environment = environment;
         this.environment.game = this;
 
-        this.environment.load(_events.onEnvironmentLoaded);
+        this.environment.load(this._events.onEnvironmentLoaded);
         return this;
     };
 

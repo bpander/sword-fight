@@ -18,11 +18,11 @@ define([
         // Put object-specific properties here //
         /////////////////////////////////////////
         
-        this.width = 20;
+        this.width = 10;
 
-        this.height = 20;
+        this.height = 100;
 
-        this.depth = 20;
+        this.depth = 10;
 
 
         ////////////////////////////////////
@@ -42,8 +42,8 @@ define([
         this.mesh = new Physijs.BoxMesh(this.geometry, this.material, 10);
         this.mesh.castShadow = true;
 
-        Util.bindAll(_events, this);
-        this.mesh.addEventListener('collision', _events.onCollision);
+        this._events = Util.bindAll(_events, this);
+        this.mesh.addEventListener('collision', this._events.onCollision);
     };
     Box.prototype = new GameObjectBase();
     Box.prototype.constructor = Box;
@@ -51,17 +51,9 @@ define([
     var _events = {
 
         onCollision: function (collidedWith, linearVelocity, angularVelocity) {
-            var ballMesh = this.environment.ball.mesh;
-            if (collidedWith === ballMesh) {
-                this.mesh.removeEventListener('collision', _events.onCollision);
-                var constraint = new Physijs.DOFConstraint(
-                    ballMesh,
-                    this.mesh,
-                    new THREE.Vector3(ballMesh.geometry.radius, ballMesh.geometry.radius, ballMesh.geometry.radius)
-                );
-                this.environment.game.scene.addConstraint(constraint);
-            }
+
         }
+
     };
 
     /**

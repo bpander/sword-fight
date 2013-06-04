@@ -13,7 +13,12 @@ require([
     ready(function () {
 
         var testWorld = new TestWorld();
-        Game.init().loadEnvironment(testWorld);
+        Game
+            .init({
+                enablePointerLock: false
+            })
+            .loadEnvironment(testWorld)
+        ;
 
     });
 
