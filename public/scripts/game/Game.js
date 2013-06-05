@@ -9,7 +9,7 @@ define([
 ) {
     "use strict";
 
-    Physijs.scripts.worker = 'assets/scripts/lib-thirdparty/physijs_worker.js';
+    Physijs.scripts.worker = 'scripts/lib-thirdparty/physijs_worker.js';
 
     var Game = {
 
