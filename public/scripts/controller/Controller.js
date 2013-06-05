@@ -46,7 +46,7 @@ define([
                 this.socket.emit('deviceorientation', {
                     rotation: this.rotation
                 });
-            }.bind(this), 1000);
+            }.bind(this), 100);
         }
 
     };

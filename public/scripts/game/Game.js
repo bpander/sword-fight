@@ -1,6 +1,7 @@
 define([
     'lib/Util',
     'game/Input',
+    'tweenjs',
     'three',
     'physijs'
 ], function (
@@ -66,10 +67,21 @@ define([
 
         onDeviceOrientation: function (data) {
             var mesh = this.environment.sword.mesh;
-            mesh.rotation.y = THREE.Math.degToRad(data.rotation.alpha);
-            mesh.rotation.x = THREE.Math.degToRad(data.rotation.beta);
-            mesh.rotation.z = THREE.Math.degToRad(data.rotation.gamma * -1);
-            mesh.__dirtyRotation  = true;
+            if (mesh.tween !== undefined) {
+                mesh.tween.stop();
+            }
+            mesh.tween = new TWEEN.Tween(mesh.rotation, 50)
+                .to({
+                    x: THREE.Math.degToRad(data.rotation.beta),
+                    y: THREE.Math.degToRad(data.rotation.alpha),
+                    z: THREE.Math.degToRad(data.rotation.gamma * -1)
+                })
+                .onUpdate(function () {
+                    mesh.__dirtyRotation = true;
+                })
+                .easing(TWEEN.Easing.Sinusoidal.Out)
+                .start()
+            ;
         }
     };
 
@@ -135,6 +147,7 @@ define([
         this.environment.updateObjects();
         this.environment.update();
         Input.update();
+        TWEEN.update();
         this.renderer.render(this.scene, this.camera);
     };
 
