@@ -24,6 +24,12 @@ define([
 
         this.depth = 100;
 
+        this.localRotation = {
+            alpha: 0,
+            beta: 0,
+            gamma: 0
+        };
+
 
         ////////////////////////////////////
         // Put base class properties here //

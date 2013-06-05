@@ -66,18 +66,17 @@ define([
         },
 
         onDeviceOrientation: function (data) {
-            var mesh = this.environment.sword.mesh;
-            if (mesh.tween !== undefined) {
-                mesh.tween.stop();
+            var sword = this.environment.sword;
+            if (sword.mesh.tween !== undefined) {
+                sword.mesh.tween.stop();
             }
-            mesh.tween = new TWEEN.Tween(mesh.rotation, 50)
-                .to({
-                    x: THREE.Math.degToRad(data.rotation.beta),
-                    y: THREE.Math.degToRad(data.rotation.alpha),
-                    z: THREE.Math.degToRad(data.rotation.gamma * -1)
-                })
+            sword.mesh.tween = new TWEEN.Tween(sword.localRotation)
+                .to(data.rotation, 500)
                 .onUpdate(function () {
-                    mesh.__dirtyRotation = true;
+                    sword.mesh.rotation.x = THREE.Math.degToRad(sword.localRotation.beta);
+                    sword.mesh.rotation.y = THREE.Math.degToRad(sword.localRotation.alpha);
+                    sword.mesh.rotation.z = THREE.Math.degToRad(sword.localRotation.gamma * -1);
+                    sword.mesh.__dirtyRotation = true;
                 })
                 .easing(TWEEN.Easing.Sinusoidal.Out)
                 .start()
