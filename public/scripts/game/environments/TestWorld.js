@@ -48,15 +48,6 @@ define([
         this.sword = new Sword();
         this.sword.mesh.position.y = 100;
         this.add(this.sword);
-
-        // Ping server
-        var socket = io.connect('//localhost');
-        socket.on('connect', function () {
-            setInterval(function () {
-                socket.emit('screenready', { some: 'data' });
-            }, 1000);
-        });
-
     };
 
     TestWorld.prototype.update = Util.noop;

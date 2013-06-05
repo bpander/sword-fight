@@ -35,7 +35,13 @@ define([
          * The environment that we'll play the game in. Will be an instance of a class that extends EnvironmentBase.
          * @type {EnvironmentBase}
          */
-        environment: null
+        environment: null,
+
+        /**
+         * The socket over which we send game data
+         * @type {Socket.IO}
+         */
+        socket: null
     };
     window.Game = Game;
 
@@ -51,6 +57,19 @@ define([
 
         onClick: function (e) {
             Util.requestPointerLock(e.currentTarget);
+        },
+
+        onSocketConnect: function () {
+            this.socket.emit('screenready');
+            this.socket.on('deviceorientation', _events.onDeviceOrientation);
+        },
+
+        onDeviceOrientation: function (data) {
+            var mesh = this.environment.sword.mesh;
+            mesh.rotation.y = THREE.Math.degToRad(data.rotation.alpha);
+            mesh.rotation.x = THREE.Math.degToRad(data.rotation.beta);
+            mesh.rotation.z = THREE.Math.degToRad(data.rotation.gamma * -1);
+            mesh.__dirtyRotation  = true;
         }
     };
 
@@ -68,6 +87,8 @@ define([
      * @return {Game}
      */
     Game.init = function (params) {
+
+        this.socket = io.connect('//localhost');
 
         Util.extend(_options, params);
 
@@ -122,7 +143,7 @@ define([
      * @return {Game}
      */
     Game.bindScope = function () {
-        this._events = Util.bindAll(_events, this);
+        _events = Util.bindAll(_events, this);
         this.animate = this.animate.bind(this);
         return this;
     };
@@ -132,10 +153,11 @@ define([
      * @return {Game}
      */
     Game.bindEvents = function () {
-        window.addEventListener('resize', this._events.onResize, false);
+        window.addEventListener('resize', _events.onResize, false);
         if (_options.requestPointerLock === true) {
-            this.renderer.domElement.addEventListener('click', this._events.onClick);
+            this.renderer.domElement.addEventListener('click', _events.onClick);
         }
+        this.socket.on('connect', _events.onSocketConnect);
         return this;
     };
 
@@ -160,7 +182,7 @@ define([
         this.environment = environment;
         this.environment.game = this;
 
-        this.environment.load(this._events.onEnvironmentLoaded);
+        this.environment.load(_events.onEnvironmentLoaded);
         return this;
     };
 

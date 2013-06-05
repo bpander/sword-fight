@@ -20,9 +20,9 @@ define([
         
         this.width = 10;
 
-        this.height = 100;
+        this.height = 5;
 
-        this.depth = 10;
+        this.depth = 100;
 
 
         ////////////////////////////////////

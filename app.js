@@ -22,11 +22,22 @@ app.get('/sword', function (req, res) {
 });
 
 // Sockets
+var screenSockets = [];
+var deviceSockets = [];
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
 
-    socket.on('screenready', function (data) {
-        console.log('Screen ready...', data);
+    socket.on('screenready', function () {
+        screenSockets.push(socket);
+    });
+
+    socket.on('deviceready', function () {
+        deviceSockets.push(socket);
+        socket.on('deviceorientation', function (data) {
+            screenSockets.forEach(function (socket) {
+                socket.emit('deviceorientation', data);
+            });
+        });
     });
 
 });
