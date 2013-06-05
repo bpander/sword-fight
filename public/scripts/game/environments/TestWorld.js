@@ -2,12 +2,15 @@
  * @fileOverview This is an example of how to extend the EnvironmentBase class
  */
 define([
+    'lib/Util',
     'game/environments/EnvironmentBase',
     'game/Input',
     'game/game-objects/Sword',
     'three',
-    'physijs'
+    'physijs',
+    'socket.io'
 ], function (
+    Util,
     EnvironmentBase,
     Input,
     Sword
@@ -45,14 +48,18 @@ define([
         this.sword = new Sword();
         this.sword.mesh.position.y = 100;
         this.add(this.sword);
+
+        // Ping server
+        var socket = io.connect('//localhost');
+        socket.on('connect', function () {
+            setInterval(function () {
+                socket.emit('screenready', { some: 'data' });
+            }, 1000);
+        });
+
     };
 
-    TestWorld.prototype.update = function () {
-        this.updateCameraPosition();
-    };
-
-    TestWorld.prototype.updateCameraPosition = function () {
-    };
+    TestWorld.prototype.update = Util.noop;
 
 
     return TestWorld;
