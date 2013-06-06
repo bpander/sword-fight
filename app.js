@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var path = require('path');
+var ejs = require('ejs');
 var SocketController = require('./controllers/SocketController.js');
 
 // Middleware
@@ -11,14 +12,15 @@ app.use(express.favicon());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+app.engine('html', ejs.renderFile);
 
 // Routes
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/public/index.html');
+    res.render(__dirname + '/views/index.html');
 });
 
 app.get('/sword', function (req, res) {
-    res.sendfile(__dirname + '/public/sword.html');
+    res.render(__dirname + '/views/sword.html');
 });
 
 var socketController = new SocketController(server);

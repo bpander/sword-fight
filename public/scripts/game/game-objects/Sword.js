@@ -11,7 +11,7 @@ define([
      * An example of an object that extends GameObjectBase. Basically just a cube.
      * @extends {GameObjectBase}
      */
-    var Box = function () {
+    var Sword = function () {
         GameObjectBase.call(this);
 
         /////////////////////////////////////////
@@ -51,8 +51,8 @@ define([
         this._events = Util.bindAll(_events, this);
         this.mesh.addEventListener('collision', this._events.onCollision);
     };
-    Box.prototype = new GameObjectBase();
-    Box.prototype.constructor = Box;
+    Sword.prototype = new GameObjectBase();
+    Sword.prototype.constructor = Sword;
 
     var _events = {
 
@@ -65,8 +65,8 @@ define([
     /**
      * Overwrite update function. This is an intentional no-op.
      */
-    Box.prototype.update = Util.noop;
+    Sword.prototype.update = Util.noop;
 
 
-    return Box;
+    return Sword;
 });
