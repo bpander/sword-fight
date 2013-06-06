@@ -70,8 +70,18 @@ define([
             if (sword.mesh.tween !== undefined) {
                 sword.mesh.tween.stop();
             }
+            var prop;
+            var delta;
+            for (prop in sword.localRotation) {
+                delta = data.rotation[prop] - sword.localRotation[prop];
+                if (delta > 270) {
+                    sword.localRotation[prop] += 360;
+                } else if (delta < -270) {
+                    sword.localRotation[prop] -= 360;
+                }
+            }
             sword.mesh.tween = new TWEEN.Tween(sword.localRotation)
-                .to(data.rotation, 500)
+                .to(data.rotation, 250)
                 .onUpdate(function () {
                     sword.mesh.rotation.x = THREE.Math.degToRad(sword.localRotation.beta);
                     sword.mesh.rotation.y = THREE.Math.degToRad(sword.localRotation.alpha);

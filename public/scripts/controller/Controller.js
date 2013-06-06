@@ -52,7 +52,7 @@ define([
     };
 
     Controller.init = function () {
-        this.socket = io.connect('//192.168.1.135');
+        this.socket = io.connect('//10.20.2.143');
         _events = Util.bindAll(_events, this);
         this.bindEvents();
     };
